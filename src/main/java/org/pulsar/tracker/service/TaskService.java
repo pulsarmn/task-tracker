@@ -2,6 +2,7 @@ package org.pulsar.tracker.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.pulsar.tracker.dto.request.TaskDeletionRequest;
 import org.pulsar.tracker.dto.response.TaskCreatedResponse;
 import org.pulsar.tracker.dto.request.TaskCreationRequest;
 import org.pulsar.tracker.entity.Task;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
+import java.util.UUID;
 
 
 @Slf4j
@@ -30,5 +32,14 @@ public class TaskService {
         log.info("New task has been successfully saved");
 
         return taskMapper.mapToResponse(task);
+    }
+
+    @Transactional
+    public void deleteTask(TaskDeletionRequest request) {
+        Objects.requireNonNull(request);
+
+        UUID id = UUID.fromString(request.taskId());
+        taskRepository.deleteById(id);
+        log.info("Task with id '{}' has been deleted", id);
     }
 }

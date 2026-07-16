@@ -1,16 +1,14 @@
 package org.pulsar.tracker.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.pulsar.tracker.dto.request.TaskDeletionRequest;
 import org.pulsar.tracker.dto.response.TaskCreatedResponse;
 import org.pulsar.tracker.dto.request.TaskCreationRequest;
 import org.pulsar.tracker.service.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -24,5 +22,11 @@ public class TaskRestController {
     ResponseEntity<TaskCreatedResponse> createTask(@Validated @RequestBody TaskCreationRequest taskCreationRequest) {
         TaskCreatedResponse response = taskService.createTask(taskCreationRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @DeleteMapping
+    ResponseEntity<Void> deleteTask(@Validated @RequestBody TaskDeletionRequest request) {
+        taskService.deleteTask(request);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
