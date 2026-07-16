@@ -6,12 +6,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pulsar.tracker.dto.request.TaskCreationRequest;
+import org.pulsar.tracker.dto.request.TaskDeletionRequest;
 import org.pulsar.tracker.dto.response.TaskCreatedResponse;
 import org.pulsar.tracker.entity.Task;
 import org.pulsar.tracker.mapper.TaskMapper;
 import org.pulsar.tracker.repository.TaskRepository;
 
 import java.time.Instant;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -63,5 +65,31 @@ public class TaskServiceTest {
         assertThatThrownBy(() -> taskService.createTask(null))
                 .isInstanceOf(NullPointerException.class)
                 .hasMessage("TaskCreationRequest must not be null");
+    }
+
+    @Test
+    void deleteTask_whenCorrectRequest_shouldDeleteTask() {
+        UUID id = UUID.fromString("b59b9772-f3be-47b3-86d8-140f0dca5f42");
+        TaskDeletionRequest request = new TaskDeletionRequest(id.toString());
+
+        doNothing().when(taskRepository).deleteById(id);
+
+        taskService.deleteTask(request);
+        verify(taskRepository, times(1)).deleteById(id);
+    }
+
+    @Test
+    void deleteTask_whenNullRequest_shouldThrowNullPointerException() {
+        assertThatThrownBy(() -> taskService.deleteTask(null))
+                .isInstanceOf(NullPointerException.class)
+                .hasMessage("TaskDeletionRequest must not be null");
+    }
+
+    @Test
+    void deleteTask_whenInvalidId_shouldThrowIllegalArgumentException() {
+        TaskDeletionRequest invalidRequest = new TaskDeletionRequest("Invalid id");
+
+        assertThatThrownBy(() -> taskService.deleteTask(invalidRequest))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }
