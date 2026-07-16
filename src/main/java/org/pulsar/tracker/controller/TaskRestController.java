@@ -1,8 +1,8 @@
 package org.pulsar.tracker.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.pulsar.tracker.dto.TaskCreatedResponse;
-import org.pulsar.tracker.dto.TaskCreationRequest;
+import org.pulsar.tracker.dto.response.TaskCreatedResponse;
+import org.pulsar.tracker.dto.request.TaskCreationRequest;
 import org.pulsar.tracker.service.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package org.pulsar.tracker.dto;
+package org.pulsar.tracker.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

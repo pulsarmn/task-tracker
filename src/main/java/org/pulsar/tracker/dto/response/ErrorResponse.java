@@ -1,4 +1,4 @@
-package org.pulsar.tracker.dto;
+package org.pulsar.tracker.dto.response;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
