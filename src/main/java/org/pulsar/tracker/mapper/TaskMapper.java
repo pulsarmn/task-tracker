@@ -19,9 +19,11 @@ public class TaskMapper {
 
     public TaskCreatedResponse mapToResponse(Task task) {
         return TaskCreatedResponse.builder()
+                .id(task.getId() == null ? null : task.getId().toString())
                 .title(task.getTitle())
                 .description(task.getDescription())
                 .dueDate(task.getDueDate())
+                .status(task.getStatus() == null ? Task.Status.INCOMPLETE.toString() : task.getStatus().toString())
                 .createdAt(task.getCreatedAt())
                 .build();
     }
