@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5454/dev_database
+    username: developer
+    password: 12345678

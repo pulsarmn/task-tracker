@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: ${TASK_TRACKER_DATABASE_URL}
+    username: ${TASK_TRACKER_DATABASE_USERNAME}
+    password: ${TASK_TRACKER_DATABASE_PASSWORD}
