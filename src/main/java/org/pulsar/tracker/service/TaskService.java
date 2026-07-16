@@ -36,10 +36,15 @@ public class TaskService {
 
     @Transactional
     public void deleteTask(TaskDeletionRequest request) {
-        Objects.requireNonNull(request);
+        Objects.requireNonNull(request, "TaskDeletionRequest must not be null");
 
-        UUID id = UUID.fromString(request.taskId());
-        taskRepository.deleteById(id);
-        log.info("Task with id '{}' has been deleted", id);
+        try {
+            UUID id = UUID.fromString(request.taskId());
+            taskRepository.deleteById(id);
+            log.info("Task with id '{}' has been deleted", id);
+        } catch (IllegalArgumentException e) {
+            log.warn("Task deletion error. Invalid id: {}", request.taskId());
+            throw e;
+        }
     }
 }
