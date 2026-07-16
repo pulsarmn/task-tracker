@@ -10,6 +10,8 @@ import org.pulsar.tracker.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 
 @Slf4j
 @Service
@@ -21,9 +23,12 @@ public class TaskService {
 
     @Transactional
     public TaskCreatedResponse createTask(TaskCreationRequest request) {
+        Objects.requireNonNull(request, "TaskCreationRequest must not be null");
+
         Task task = taskMapper.mapToTask(request);
         task = taskRepository.saveAndFlush(task);
         log.info("New task has been successfully saved");
+
         return taskMapper.mapToResponse(task);
     }
 }
