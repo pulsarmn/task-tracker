@@ -1,0 +1,4 @@
+[libraries]
+spring-boot-starter-liquibase = { module = 'org.springframework.boot:spring-boot-starter-liquibase' }
+
+postgresql-jdbc-driver = { module = 'org.postgresql:postgresql' }
