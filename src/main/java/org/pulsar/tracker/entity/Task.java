@@ -35,8 +35,9 @@ public class Task {
     @Column(name = "due_date")
     private Instant dueDate;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status = Status.INCOMPLETE;
 
     @CreationTimestamp
     @Column(name = "created_at")
