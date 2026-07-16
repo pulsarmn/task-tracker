@@ -1,0 +1,21 @@
+services:
+  database:
+    container_name: task-tracker-database
+    image: postgres:18
+    environment:
+      POSTGRES_DB: dev_database
+      POSTGRES_USER: developer
+      POSTGRES_PASSWORD: 12345678
+    ports:
+      - "5454:5432"
+    volumes:
+      - "database_data:/var/lib/postgresql"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U developer -d dev_database"]
+      interval: 5s
+      timeout: 15s
+      retries: 5
+
+volumes:
+  database_data:
