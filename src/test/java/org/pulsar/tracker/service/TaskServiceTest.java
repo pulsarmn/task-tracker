@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pulsar.tracker.dto.request.TaskCreationRequest;
 import org.pulsar.tracker.dto.request.TaskEditRequest;
+import org.pulsar.tracker.dto.request.TaskStatusUpdateRequest;
 import org.pulsar.tracker.dto.response.TaskResponse;
 import org.pulsar.tracker.entity.Task;
 import org.pulsar.tracker.exception.TaskNotFoundException;
@@ -111,6 +112,44 @@ public class TaskServiceTest {
 
         assertThatThrownBy(() -> taskService.editTask(id, request))
                 .isInstanceOf(TaskNotFoundException.class)
-                .hasMessage("The task the with id '%s' was not found".formatted(id));
+                .hasMessage("The task with the id '%s' was not found".formatted(id));
+    }
+
+    @Test
+    void updateTaskStatus_whenCorrectRequest_shouldUpdateTaskStatus() {
+        UUID id = UUID.fromString("b59b9772-f3be-47b3-86d8-140f0dca5f42");
+        TaskStatusUpdateRequest request = new TaskStatusUpdateRequest(Task.Status.COMPLETED);
+        Task.TaskBuilder builder = Task.builder()
+                .id(id)
+                .title("Some title")
+                .description("Some description");
+        Task oldTask = builder.status(Task.Status.INCOMPLETE).build();
+        Task newTask = builder.status(Task.Status.COMPLETED).build();
+        TaskResponse expectedResponse = TaskResponse.builder()
+                .id(newTask.getId().toString())
+                .title(newTask.getTitle())
+                .description(newTask.getDescription())
+                .status(newTask.getStatus().toString())
+                .build();
+
+        doReturn(Optional.of(oldTask)).when(taskRepository).findById(id);
+        doReturn(newTask).when(taskRepository).saveAndFlush(newTask);
+        doReturn(expectedResponse).when(taskMapper).mapToResponse(newTask);
+
+        TaskResponse actualResponse = taskService.updateTaskStatus(id, request);
+
+        assertThat(actualResponse).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    void updateTaskStatus_whenTaskDoesNotExist_shouldThrowTaskNotFoundException() {
+        UUID id = UUID.fromString("b59b9772-f3be-47b3-86d8-140f0dca5f42");
+        TaskStatusUpdateRequest request = new TaskStatusUpdateRequest(Task.Status.COMPLETED);
+
+        doReturn(Optional.empty()).when(taskRepository).findById(id);
+
+        assertThatThrownBy(() -> taskService.updateTaskStatus(id, request))
+                .isInstanceOf(TaskNotFoundException.class)
+                .hasMessage("The task with the id '%s' was not found".formatted(id));
     }
 }
