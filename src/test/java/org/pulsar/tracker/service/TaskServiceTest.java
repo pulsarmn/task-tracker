@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pulsar.tracker.dto.request.TaskCreationRequest;
 import org.pulsar.tracker.dto.request.TaskEditRequest;
-import org.pulsar.tracker.dto.response.TaskCreatedResponse;
+import org.pulsar.tracker.dto.response.TaskResponse;
 import org.pulsar.tracker.entity.Task;
 import org.pulsar.tracker.exception.TaskNotFoundException;
 import org.pulsar.tracker.mapper.TaskMapper;
@@ -44,7 +44,7 @@ public class TaskServiceTest {
                 .dueDate(request.dueDate());
         Task preSavedTask = builder.build();
         Task savedTask = builder.createdAt(Instant.now()).build();
-        TaskCreatedResponse expectedResponse = TaskCreatedResponse.builder()
+        TaskResponse expectedResponse = TaskResponse.builder()
                 .title(savedTask.getTitle())
                 .description(savedTask.getDescription())
                 .dueDate(savedTask.getDueDate())
@@ -55,7 +55,7 @@ public class TaskServiceTest {
         doReturn(savedTask).when(taskRepository).saveAndFlush(preSavedTask);
         doReturn(expectedResponse).when(taskMapper).mapToResponse(savedTask);
 
-        TaskCreatedResponse actualResponse = taskService.createTask(request);
+        TaskResponse actualResponse = taskService.createTask(request);
 
         assertThat(actualResponse).isEqualTo(expectedResponse);
     }
@@ -86,7 +86,7 @@ public class TaskServiceTest {
                 .description(request.description())
                 .dueDate(request.dueDate())
                 .build();
-        TaskCreatedResponse expectedResponse = TaskCreatedResponse.builder()
+        TaskResponse expectedResponse = TaskResponse.builder()
                 .id(newTask.getId().toString())
                 .title(newTask.getTitle())
                 .description(newTask.getDescription())
@@ -97,7 +97,7 @@ public class TaskServiceTest {
         doReturn(newTask).when(taskRepository).saveAndFlush(newTask);
         doReturn(expectedResponse).when(taskMapper).mapToResponse(newTask);
 
-        TaskCreatedResponse actualResponse = taskService.editTask(id, request);
+        TaskResponse actualResponse = taskService.editTask(id, request);
 
         assertThat(actualResponse).isEqualTo(expectedResponse);
     }

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pulsar.tracker.dto.request.TaskCreationRequest;
 import org.pulsar.tracker.dto.request.TaskEditRequest;
-import org.pulsar.tracker.dto.response.TaskCreatedResponse;
+import org.pulsar.tracker.dto.response.TaskResponse;
 import org.pulsar.tracker.entity.Task;
 import org.pulsar.tracker.exception.TaskNotFoundException;
 import org.pulsar.tracker.mapper.TaskMapper;
@@ -12,7 +12,6 @@ import org.pulsar.tracker.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
 import java.util.UUID;
 
 
@@ -25,7 +24,7 @@ public class TaskService {
     private final TaskRepository taskRepository;
 
     @Transactional
-    public TaskCreatedResponse createTask(TaskCreationRequest request) {
+    public TaskResponse createTask(TaskCreationRequest request) {
         Task task = taskMapper.mapToTask(request);
         task = taskRepository.saveAndFlush(task);
         log.info("New task has been successfully saved");
@@ -34,7 +33,7 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskCreatedResponse editTask(UUID taskId, TaskEditRequest request) {
+    public TaskResponse editTask(UUID taskId, TaskEditRequest request) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new TaskNotFoundException("The task the with id '{}' was not found"));
         applyTaskChanges(task, request);
