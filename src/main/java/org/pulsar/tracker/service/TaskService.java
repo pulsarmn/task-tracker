@@ -2,9 +2,8 @@ package org.pulsar.tracker.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.pulsar.tracker.dto.request.TaskDeletionRequest;
-import org.pulsar.tracker.dto.response.TaskCreatedResponse;
 import org.pulsar.tracker.dto.request.TaskCreationRequest;
+import org.pulsar.tracker.dto.response.TaskCreatedResponse;
 import org.pulsar.tracker.entity.Task;
 import org.pulsar.tracker.mapper.TaskMapper;
 import org.pulsar.tracker.repository.TaskRepository;
@@ -35,16 +34,10 @@ public class TaskService {
     }
 
     @Transactional
-    public void deleteTask(TaskDeletionRequest request) {
-        Objects.requireNonNull(request, "TaskDeletionRequest must not be null");
+    public void deleteTask(UUID taskId) {
+        Objects.requireNonNull(taskId, "Task id must not be null");
 
-        try {
-            UUID id = UUID.fromString(request.taskId());
-            taskRepository.deleteById(id);
-            log.info("Task with id '{}' has been deleted", id);
-        } catch (IllegalArgumentException e) {
-            log.warn("Task deletion error. Invalid id: {}", request.taskId());
-            throw e;
-        }
+        taskRepository.deleteById(taskId);
+        log.info("Task with id '{}' has been deleted", taskId);
     }
 }

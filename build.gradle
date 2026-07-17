@@ -21,6 +21,10 @@ dependencies {
     implementation libs.postgresql.jdbc.driver
 }
 
+compileJava {
+    options.compilerArgs << '-parameters'
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(25)
