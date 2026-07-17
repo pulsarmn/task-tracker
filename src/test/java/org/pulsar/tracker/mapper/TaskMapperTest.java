@@ -5,7 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.pulsar.tracker.dto.request.TaskCreationRequest;
-import org.pulsar.tracker.dto.response.TaskCreatedResponse;
+import org.pulsar.tracker.dto.response.TaskResponse;
 import org.pulsar.tracker.entity.Task;
 
 import java.time.Instant;
@@ -49,7 +49,7 @@ public class TaskMapperTest {
     @ParameterizedTest
     @MethodSource("correctTasks")
     void mapToResponse_whenCorrectRequest_shouldReturnMappedResponse(Task correctTask) {
-        TaskCreatedResponse response = taskMapper.mapToResponse(correctTask);
+        TaskResponse response = taskMapper.mapToResponse(correctTask);
 
         assertThat(response.title()).isEqualTo(correctTask.getTitle());
         assertThat(response.description()).isEqualTo(correctTask.getDescription());

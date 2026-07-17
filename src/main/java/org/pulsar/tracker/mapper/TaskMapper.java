@@ -1,7 +1,7 @@
 package org.pulsar.tracker.mapper;
 
 import org.pulsar.tracker.dto.request.TaskCreationRequest;
-import org.pulsar.tracker.dto.response.TaskCreatedResponse;
+import org.pulsar.tracker.dto.response.TaskResponse;
 import org.pulsar.tracker.entity.Task;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +17,8 @@ public class TaskMapper {
                 .build();
     }
 
-    public TaskCreatedResponse mapToResponse(Task task) {
-        return TaskCreatedResponse.builder()
+    public TaskResponse mapToResponse(Task task) {
+        return TaskResponse.builder()
                 .id(task.getId() == null ? null : task.getId().toString())
                 .title(task.getTitle())
                 .description(task.getDescription())

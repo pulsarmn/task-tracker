@@ -2,7 +2,8 @@ package org.pulsar.tracker.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.pulsar.tracker.dto.request.TaskCreationRequest;
-import org.pulsar.tracker.dto.response.TaskCreatedResponse;
+import org.pulsar.tracker.dto.request.TaskEditRequest;
+import org.pulsar.tracker.dto.response.TaskResponse;
 import org.pulsar.tracker.service.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +21,16 @@ public class TaskRestController {
     private final TaskService taskService;
 
     @PostMapping
-    ResponseEntity<TaskCreatedResponse> createTask(@Validated @RequestBody TaskCreationRequest taskCreationRequest) {
-        TaskCreatedResponse response = taskService.createTask(taskCreationRequest);
+    ResponseEntity<TaskResponse> createTask(@Validated @RequestBody TaskCreationRequest taskCreationRequest) {
+        TaskResponse response = taskService.createTask(taskCreationRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PutMapping("/{id}")
+    ResponseEntity<TaskResponse> updateTask(@PathVariable UUID id,
+                                            @Validated @RequestBody TaskEditRequest taskEditRequest) {
+        TaskResponse response = taskService.editTask(id, taskEditRequest);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")

@@ -5,7 +5,7 @@ import java.time.Instant;
 
 
 @Builder
-public record TaskCreatedResponse(
+public record TaskResponse(
         String id,
         String title,
         String description,
