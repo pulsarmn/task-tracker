@@ -7,6 +7,7 @@ import org.pulsar.tracker.dto.response.ErrorResponse;
 import org.pulsar.tracker.exception.TaskNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -34,7 +35,7 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.NOT_FOUND, "No resource found", request);
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class, IllegalArgumentException.class, NullPointerException.class})
+    @ExceptionHandler({MethodArgumentNotValidException.class, IllegalArgumentException.class, NullPointerException.class, HttpMessageNotReadableException.class})
     ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(HttpServletRequest request) {
         // TODO: detailed error message
         return build(HttpStatus.BAD_REQUEST, "Invalid body argument", request);
