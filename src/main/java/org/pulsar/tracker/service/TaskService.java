@@ -2,8 +2,8 @@ package org.pulsar.tracker.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.pulsar.tracker.dto.response.TaskCreatedResponse;
 import org.pulsar.tracker.dto.request.TaskCreationRequest;
+import org.pulsar.tracker.dto.response.TaskCreatedResponse;
 import org.pulsar.tracker.entity.Task;
 import org.pulsar.tracker.mapper.TaskMapper;
 import org.pulsar.tracker.repository.TaskRepository;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
+import java.util.UUID;
 
 
 @Slf4j
@@ -30,5 +31,13 @@ public class TaskService {
         log.info("New task has been successfully saved");
 
         return taskMapper.mapToResponse(task);
+    }
+
+    @Transactional
+    public void deleteTask(UUID taskId) {
+        Objects.requireNonNull(taskId, "Task id must not be null");
+
+        taskRepository.deleteById(taskId);
+        log.info("Task with id '{}' has been deleted", taskId);
     }
 }

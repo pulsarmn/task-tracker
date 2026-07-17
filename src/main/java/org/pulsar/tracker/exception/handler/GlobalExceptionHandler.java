@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
 
     private final Clock clock;
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler({MethodArgumentNotValidException.class, IllegalArgumentException.class, NullPointerException.class})
     ResponseEntity<ErrorResponse> handleMethodArgumentNotValid(HttpServletRequest request) {
         // TODO: detailed error message
         return build(HttpStatus.BAD_REQUEST, "Invalid body argument", request);
