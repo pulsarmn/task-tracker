@@ -7,15 +7,20 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.pulsar.tracker.dto.request.TaskCreationRequest;
 import org.pulsar.tracker.dto.request.TaskEditRequest;
+import org.pulsar.tracker.dto.request.TaskFilter;
 import org.pulsar.tracker.dto.request.TaskStatusUpdateRequest;
 import org.pulsar.tracker.dto.response.TaskResponse;
 import org.pulsar.tracker.entity.Task;
 import org.pulsar.tracker.exception.TaskNotFoundException;
 import org.pulsar.tracker.mapper.TaskMapper;
 import org.pulsar.tracker.repository.TaskRepository;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.Month;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,6 +40,27 @@ public class TaskServiceTest {
 
     @InjectMocks
     private TaskService taskService;
+
+    @Test
+    void getAll_whenPassedCorrectFilter_shouldReturnFilteredTasks() {
+        TaskFilter filter = new TaskFilter(LocalDate.of(2026, Month.JULY, 15), LocalDate.of(2026, Month.JULY, 20), Task.Status.INCOMPLETE);
+        List<Task> expectedTasks = getTasks();
+
+        doReturn(expectedTasks).when(taskRepository).findAll(any(Specification.class));
+
+        List<TaskResponse> actualTasks = taskService.getAll(filter);
+
+        assertThat(actualTasks).isNotNull();
+        assertThat(actualTasks).hasSize(expectedTasks.size());
+    }
+
+    private List<Task> getTasks() {
+        return List.of(
+                new Task(UUID.randomUUID(), "First title", "First Description", null, null, null, null),
+                new Task(UUID.randomUUID(), "Second title", "Second Description", null, null, null, null),
+                new Task(UUID.randomUUID(), "Third title", "Third Description", null, null, null, null)
+        );
+    }
 
     @Test
     void createTask_whenCorrectCreationRequest_shouldSaveTaskAndReturnResponse() {
