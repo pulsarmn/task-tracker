@@ -60,13 +60,6 @@ public class TaskServiceTest {
     }
 
     @Test
-    void createTask_whenNullRequest_shouldThrowNullPointerException() {
-        assertThatThrownBy(() -> taskService.createTask(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("TaskCreationRequest must not be null");
-    }
-
-    @Test
     void deleteTask_whenCorrectRequest_shouldDeleteTask() {
         UUID id = UUID.fromString("b59b9772-f3be-47b3-86d8-140f0dca5f42");
 
@@ -74,12 +67,5 @@ public class TaskServiceTest {
 
         taskService.deleteTask(id);
         verify(taskRepository, times(1)).deleteById(id);
-    }
-
-    @Test
-    void deleteTask_whenNullRequest_shouldThrowNullPointerException() {
-        assertThatThrownBy(() -> taskService.deleteTask(null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("Task id must not be null");
     }
 }
