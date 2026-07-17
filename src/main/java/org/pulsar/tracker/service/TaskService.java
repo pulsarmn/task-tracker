@@ -2,18 +2,20 @@ package org.pulsar.tracker.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.pulsar.tracker.dto.request.TaskCreationRequest;
-import org.pulsar.tracker.dto.request.TaskEditRequest;
-import org.pulsar.tracker.dto.request.TaskStatusUpdateRequest;
+import org.pulsar.tracker.dto.request.*;
 import org.pulsar.tracker.dto.response.TaskResponse;
 import org.pulsar.tracker.entity.Task;
 import org.pulsar.tracker.exception.TaskNotFoundException;
 import org.pulsar.tracker.mapper.TaskMapper;
 import org.pulsar.tracker.repository.TaskRepository;
+import org.pulsar.tracker.repository.spec.TaskSpecifications;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -23,6 +25,23 @@ public class TaskService {
 
     private final TaskMapper taskMapper;
     private final TaskRepository taskRepository;
+
+    public List<TaskResponse> getAll(TaskFilter filter) {
+        Specification<Task> specification = mapToSpecification(filter);
+        return taskRepository.findAll(specification)
+                .stream()
+                .map(taskMapper::mapToResponse)
+                .collect(Collectors.toList());
+
+    }
+
+    private Specification<Task> mapToSpecification(TaskFilter filter) {
+        Specification<Task> specification = Specification.unrestricted();
+        if (filter.status() != null) {
+            specification = specification.and(TaskSpecifications.hasStatus(filter.status()));
+        }
+        return specification.and(TaskSpecifications.hasDueDateBetween(filter.dateFrom(), filter.dateTo()));
+    }
 
     @Transactional
     public TaskResponse createTask(TaskCreationRequest request) {
