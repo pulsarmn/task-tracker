@@ -126,3 +126,9 @@ curl --request GET "http://localhost:8080/api/v1/tasks" \
 ```bash
 curl --request DELETE "http://localhost:8080/api/v1/tasks/7942aba6-61f8-44ef-ba60-92b17f8c16fd"
 ```
+
+## Автор
+
+Telegram: @pulsarmn
+Email: pulsarmn@yandex.ru
+GitHub: https://github.com/pulsarmn
