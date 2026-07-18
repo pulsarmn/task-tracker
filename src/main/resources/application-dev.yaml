@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5454/dev_database
-    username: developer
-    password: 12345678
+    url: ${DEV_TASK_TRACKER_DATABASE_URL:jdbc:postgresql://localhost:5454/dev_database}
+    username: ${DEV_TASK_TRACKER_DATABASE_USERNAME:developer}
+    password: ${DEV_TASK_TRACKER_DATABASE_PASSWORD:12345678}
   jpa:
     properties:
       hibernate:
