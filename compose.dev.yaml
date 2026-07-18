@@ -1,4 +1,20 @@
 services:
+  task-tracker:
+    container_name: task-tracker
+    build:
+      context: ./
+      dockerfile: dev.Dockerfile
+    environment:
+      DEV_TASK_TRACKER_DATABASE_URL: jdbc:postgresql://database/dev_database
+      DEV_TASK_TRACKER_DATABASE_USERNAME: developer
+      DEV_TASK_TRACKER_DATABASE_PASSWORD: 12345678
+    ports:
+      - "8000:8080"
+    networks:
+      task_tracker_network:
+    restart: always
+    depends_on:
+      - database
   database:
     container_name: task-tracker-database
     image: postgres:18
@@ -10,6 +26,8 @@ services:
       - "5454:5432"
     volumes:
       - "database_data:/var/lib/postgresql"
+    networks:
+      task_tracker_network:
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U developer -d dev_database"]
@@ -19,3 +37,6 @@ services:
 
 volumes:
   database_data:
+
+networks:
+  task_tracker_network:
